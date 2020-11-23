@@ -8,13 +8,17 @@
 ########################################
 
 import os #displaying folder contents
+import math
 
 # This will never change for this project 
-n=333303741167705894679341140877729876626667 
+n=777171741032261716925235958354065598504223
 e=131
 blocksize=14
-d=25443033676924114097557866558354696010331
-
+d=231371739696627534045915232632172695126683
+b_3 = 3456273625187339
+p_3 = 11111311111233333600700633333211111311111
+r = 2184169779496
+k = 20653351956439504081
 
 # Global information
 IS_ENCRYPTING = ""
@@ -139,7 +143,7 @@ def RSASignature():
 # User input to select encryption or decryption
 while (len(IS_ENCRYPTING) == 0 or (IS_ENCRYPTING != "E" and IS_ENCRYPTING != "D")):
     print("[E]ncrpyt or [D]ecrypt?")
-    IS_ENCRYPTING = "E"#input()[0].upper()
+    IS_ENCRYPTING = input()[0].upper()
     print("")
 
 # User input to select file
@@ -178,6 +182,16 @@ OUT_DATA = Encrypt(IN_DATA)
 encryptedFile = open('encrypted.txt', 'w')
 encryptedFile.write(OUT_DATA)
 encryptedFile.close()
+
+ElGAMELSIGNATURE_DATA = ElGamalSignature()
+elGamelSignatureFile = open('elgamelsignature.txt', 'w')
+elGamelSignatureFile.write(ElGAMELSIGNATURE_DATA)
+elGamelSignatureFile.close()
+
+RSASIGNATURE_DATA = RSASignature()
+rsaSignatureFile = open('rsasignature.txt', 'w')
+rsaSignatureFile.write(RSASIGNATURE_DATA)
+rsaSignatureFile.close()
 # Decrypt (decrpyt back into blocks)
 # Decode (blocks -> plaintext)
 
