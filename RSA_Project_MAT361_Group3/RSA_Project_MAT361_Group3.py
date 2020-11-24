@@ -9,7 +9,6 @@
 
 import os #displaying folder contents
 import math
-
 # This will never change for this project 
 n=777171741032261716925235958354065598504223
 e=131
@@ -28,6 +27,7 @@ BLOCKS = []
 OUT_DATA = ""
 
 # Functions
+
 def Modexp(a,x,m):
     a = a % m
     counter = 1
@@ -45,13 +45,14 @@ def Encode(message):
     encoded = []
     for i in range(0,len(message)):
         block = block * 1000 + message[i]
+
         if (i+1) % blocksize == 0:
             encoded.append(block)
             block = 0
     # there may be an incomplete block
     if block > 0:
         encoded.append(block)
-    print("encoded",encoded[0])
+
     return encoded 
 
 def Encrypt(message):
@@ -75,7 +76,7 @@ def Modinverse(a, m):
   
     if (m == 1): 
         return 0
-  
+ 
     while (a > 1): 
         q = a // m 
   
@@ -137,6 +138,30 @@ def RSASignature():
   out += str(Modexp(m,d,n))
   return out
 
+# Convert a number into a decoded message
+def Decode(number):
+    message = bytearray()
+    numberStr = ""
+    # take care of the leading zeros on the first char
+    leadingZeros = 3 - (len(str(number)) % 3)
+    if leadingZeros < 3:
+        numberStr += "0" * leadingZeros 
+    numberStr += str(number)
+
+    for i in range(0,len(numberStr), 3):
+        if int(numberStr[i:i+3]) < 256:
+            message.append(int(numberStr[i:i+3]))
+        else:
+            if int(numberStr[i:i+3]) != 999:
+                print(int(numberStr[i:i+3]))
+    return message
+
+def Decrypt(encrypted):
+    blocks = []
+    for i in encrypted.split():
+        blocks.append(Decode(Modexp(int(i),d,n)))
+
+    return bytearray().join(blocks)
 
 ### Run Program ###
 
@@ -178,10 +203,15 @@ while (len(FILEPATH) > 0):
 IN_DATA = open(FILEPATH, "rb").read()
 
 # Encode (plain text -> blocks ready for encryption)
-OUT_DATA = Encrypt(IN_DATA)
-encryptedFile = open('encrypted.txt', 'w')
-encryptedFile.write(OUT_DATA)
-encryptedFile.close()
+if IS_ENCRYPTING[0] == "E":
+    OUT_DATA = Encrypt(IN_DATA)
+    encryptedFile = open('out', 'w')
+    encryptedFile.write(OUT_DATA)
+    encryptedFile.close()
+else: 
+    decryptedFile = open('out','bw')
+    decryptedFile.write( Decrypt(IN_DATA))
+    decryptedFile.close()
 
 ElGAMELSIGNATURE_DATA = ElGamalSignature()
 elGamelSignatureFile = open('elgamelsignature.txt', 'w')
@@ -192,7 +222,5 @@ RSASIGNATURE_DATA = RSASignature()
 rsaSignatureFile = open('rsasignature.txt', 'w')
 rsaSignatureFile.write(RSASIGNATURE_DATA)
 rsaSignatureFile.close()
-# Decrypt (decrpyt back into blocks)
-# Decode (blocks -> plaintext)
 
 
